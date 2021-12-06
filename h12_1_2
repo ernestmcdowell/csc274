@@ -1,0 +1,49 @@
+#!/usr/bin/bash
+if [ $# == 0 ]
+then
+    echo "You must enter an argument!"
+    exit 1
+else
+    FILENAME="$1"
+fi
+
+if [[ ! -f "$FILENAME" ]]
+then
+    echo "$FILENAME is not a regular file!"
+    exit 2
+fi
+
+NORMALLINES=$(cat "$FILENAME" |grep -c '.')
+BLANKLINES=$(cat "$FILENAME" | grep -nc '^$')
+TOTAL=$(($NORMALLINES + $BLANKLINES))
+CURRENTLINE=0
+
+while read -r LINE
+do
+    CURRENTLINE=$((CURRENTLINE+1))
+    if [[ $LINE =~ ^$ ]]
+    then
+      printf "Found blank on: $CURRENTLINE  So far there are $((bl+1)) blank lines\n"
+      bl=$((bl+1))
+    fi
+done < "$1"
+
+while read NORMLINES
+do
+  if [[ $NORMLINES =~ . ]]
+  then nl=$((nl+1))
+  fi
+done < $FILENAME
+
+printf "Regular lines:%4d\n" $NORMALLINES
+printf "Blank lines:  %4d\n" $BLANKLINES
+printf "Lines Read:   %4d\n" $TOTAL
+
+if (($BLANKLINES > 0 ))
+then
+    PERCENTAGE=$((100 * $BLANKLINES / $TOTAL))
+    printf "Percentage Blank Lines: %4d\n" $PERCENTAGE
+elif (($BLANKLINES <= 0))
+then
+    echo "There weren't any blank lines"
+fi
