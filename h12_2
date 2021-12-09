@@ -26,8 +26,6 @@ done < bitcoin.txt
 echo "The minimum rate so far is $MIN_RATE at $MIN_TIME"
 echo "The maximum rate so far is $MAX_RATE at $MAX_TIME"
 
-MAX_OBJECT=$(printf '{"Maximum": {"Rate":"%f","Time":"%s"}}' "$MAX_RATE" "$MAX_TIME")
-MIN_OBJECT=$(printf '{"Minimum": {"Rate":"%f","Time":"%s"}}' "$MIN_RATE" "$MIN_TIME")
+MINMAX='{"Maximum" : {"Rate":"%f", "Time":%s},"Minimum": {"Rate":"%f", "Time":%s}}'
 
-echo $MAX_OBJECT 
-echo $MIN_OBJECT
+printf "$MINMAX" "$MAX_RATE" "$MAX_TIME" "$MIN_RATE" "$MIN_TIME" # > minmax.json 
